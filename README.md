@@ -1,7 +1,6 @@
 # pre contest visualizer
-[![fa](https://img.shields.io/badge/click_to_README-Persian-red.svg)](README-FA.md)
+[![fa](https://img.shields.io/badge/click_to_README-Persian-red.svg)](/README-FA.md)
 <br>
-
 
 This repository contains a Python program that simulates a realistic ICPC contest.
 
@@ -31,7 +30,6 @@ When you're finished working on the project, you can deactivate the virtual envi
 deactivate
 ```
 
-
 ## Contributing
 We welcome contributions to this project! If you have any ideas or improvements, please feel free to create a pull request.
 
@@ -41,4 +39,4 @@ pip3 freeze > requirements.txt
 ```
 
 ## License
-This project is licensed under the [MIT Licence](/LICENSE).  Please see the LICENSE file for more details.
+This project is licensed under the [MIT License](/LICENSE).  Please see the LICENSE file for more details.
