@@ -31,15 +31,8 @@ my_data_html = soup.find('script')
 row_list = eval(my_data_html.string.split('=')[1].strip()[0: -1])
 
 total_teams = []
-real_rank = 1
 for team in row_list:
-    team_list = [real_rank]
-    team_list.append(team[0])
-    team_list.append(team[1].split(":")[0].strip())
-    team_list.append(team[1].split(":")[1].strip())
-    team_list.append(team[2])
-    team_list.append(team[3])
-    team_list.append(team[4])
+    team_list = [int(team[0]), team[1].split(":")[0].strip(), team[1].split(":")[1].strip(), *team[2: 5]]
     accept = [0] * len(letters)
     trying = [0] * len(letters)
     timing = [0] * len(letters)
@@ -53,12 +46,9 @@ for team in row_list:
             trying[index] = int(tr)
             timing[index] = int(ti) if ti != '--' else 0
     team_list.append(accept)
-    # team_list.append(team[5])
     team_list.append(trying)
     team_list.append(timing)
     total_teams.append(team_list)
-    real_rank += 1
-    # print(team_list)
 
 main_dict = {
     'name': name,
