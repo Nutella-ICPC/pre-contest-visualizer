@@ -35,23 +35,19 @@ row_list = eval(my_data_html.string.split('=')[1].strip()[0: -1])
 
 total_teams = []
 for team in row_list:
-    try:
-        team[0] = int(team[0])
-    except ValueError:
-        team[0] = 0
-    team_list = [team[0], team[1].split(":")[0].strip(), team[1].split(":")[1].strip(), *team[2: 5]]
+    # team rank [0] - university [1] - team name [2] - solved [3] - penalty [4] - last accept [5]
+    team_list = [int(team[0]), team[1].split(":")[0].strip(), team[1].split(":")[1].strip(), *team[2: 5]]
     accept = [0] * len(letters)
     trying = [0] * len(letters)
     timing = [0] * len(letters)
     for index, q in enumerate(team[5: -1]):
-        if q != 0:
-            if q[1] == 'yes':
-                accept[index] = 1
-            elif q[1] == 'yes first':
-                accept[index] = 2
-            tr, ti = q[0].split('/')
-            trying[index] = int(tr)
-            timing[index] = int(ti) if ti != '--' else 0
+        # if q != 0:
+        if q['cls'] == 'yes':
+            accept[index] = 1
+        elif q['cls'] == 'yes first':
+            accept[index] = 2
+        trying[index] = q['att']
+        timing[index] = q['time']
     team_list.append(accept)
     team_list.append(trying)
     team_list.append(timing)

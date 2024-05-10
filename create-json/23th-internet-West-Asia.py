@@ -49,7 +49,8 @@ for team in row_list:
                 accept[index] = 1
             elif q[1] == 'yes first':
                 accept[index] = 2
-            tr, ti = q[0].split('/')
+            ti, tr = q[0].split('/')
+            tr = tr.split()[0]
             trying[index] = int(tr)
             timing[index] = int(ti) if ti != '--' else 0
     team_list.append(accept)
