@@ -2,6 +2,7 @@ import argparse
 from create_team import *
 from scoreboard import *
 from add_status import *
+from read_status import *
 
 def main():
     parser = argparse.ArgumentParser(description='commands of parser information')
@@ -10,6 +11,7 @@ def main():
     parser.add_argument('-env', '-e', metavar='environment', type=str, help='num of list: us | fav | all')
     parser.add_argument('-hide', metavar='hide', type=str, help='hide some information')
     parser.add_argument('-add', '-a' , nargs=3, metavar=("time", 'problem', "status"), type=str, help='add a status')
+    parser.add_argument('-read', action='store_true', help='reading status')
     args = parser.parse_args()
 
     if args.create:
@@ -24,6 +26,8 @@ def main():
     elif args.add:
         time, problem, status = args.add
         add_status(time, problem, status)
+    elif args.read:
+        read_status()
     else:
         print("\033[1;31mError\033[0m: Invalid arguman!")
 
