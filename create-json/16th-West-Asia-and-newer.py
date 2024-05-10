@@ -3,9 +3,12 @@ from bs4 import BeautifulSoup
 import json
 
 
-name = 'ICPC 2018 Asia Region Tehran Site'
-url = "http://icpc.sharif.edu/2018/scoreboard/"
-# url = "http://icpc.sharif.edu/2020/scoreboard/"
+# name = 'ICPC 2018 Asia Region Tehran Site'
+# url = "http://icpc.sharif.edu/2018/scoreboard/"
+
+name = input('Enter name of contest: ')
+url = input('Enter scoreboard url of contest: ')
+
 response = requests.get(url)
 
 if response.status_code == 200:
