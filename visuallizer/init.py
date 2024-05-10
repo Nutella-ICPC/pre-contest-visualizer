@@ -20,6 +20,7 @@ config = {
     'team_curser': None,
     'jsonfile': jsonfile,
     'favorites': [],
+    'status': []
 }
 
 with open(f"./config.json", "w") as outfile:

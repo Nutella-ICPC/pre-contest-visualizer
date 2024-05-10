@@ -6,19 +6,27 @@ def create_scoreboard(time):
     with open(f"./{config['jsonfile']}", 'r') as jsonfile:
         latest_scoreboard = json.load(jsonfile)
 
+    first_accept = ['na'] * len(latest_scoreboard['question_names'])
+    total_accept = [0] * len(latest_scoreboard['question_names'])
+
     new_scoreboard = []
     for team in latest_scoreboard['teams']:
         new_team = [team[0], *team[2: 0: -1]]
         count = 0
         penalty = 0
         statusbar = []
+        counter = 0
         for accept, trying, timing in zip(*team[6: 9]):
             if accept > 0 and time >= timing:
+                total_accept[counter] += 1
+                first_accept[counter] = timing if first_accept[counter] == 'na' else min(first_accept[counter], timing)
                 count += 1
                 penalty += (timing + (trying - 1) * 20)
                 status = timing
             else:
                 status = '--'
+            counter += 1
+
             statusbar.append(f'{trying}/{status}')
         new_team.append(count)
         new_team.append(penalty)
@@ -28,6 +36,8 @@ def create_scoreboard(time):
     new_scoreboard = sorted(new_scoreboard, key=lambda x: (-x[3], x[4]))
     for i in range(1, len(new_scoreboard) + 1):
         new_scoreboard[i - 1][0] = i
+    new_scoreboard.append(['+', 'total acccept', '', '', '', total_accept])
+    new_scoreboard.append(['*', 'first acccept', '', '', '', first_accept])
 
     return new_scoreboard
 
@@ -74,7 +84,7 @@ def get_rank_by_color(rank):
         return 'light red'
     return None
 
-def showscoreboard(scoreboard, our_team):
+def showscoreboard(scoreboard, our_team, hide):
     max_field_width = [0, 0, 0, 0] # rank, name, university, penalty
 
     def returner_message_fields(team):
@@ -85,25 +95,48 @@ def showscoreboard(scoreboard, our_team):
         for i, field in enumerate(team_message):
             max_field_width[i] = max(max_field_width[i], len(str(field)))
 
-    for team in scoreboard:
+    for row, team in enumerate(scoreboard):
         rank = f"{str(team[0]):>{max_field_width[0]}}"
-        rank_color = get_rank_by_color(team[0])
-        if rank_color:
-            rank = colored_text(rank, rank_color)
+        if row < len(scoreboard) - 2:
+            rank_color = get_rank_by_color(team[0])
+            if rank_color:
+                rank = colored_text(rank, rank_color)
+        else:
+            if 'status' in hide:
+                break
         name = f"{str(team[1]):>{max_field_width[1]}}"
-        university = f"{str(team[2]):>{max_field_width[2]}}"
+        university = f"{str(team[2]):>{max_field_width[2]}}" if 'uni' not in hide else ''
         if team[1] == our_team:
             name = colored_text(name, 'light green')
             university = colored_text(university, 'light green')
         accept = f"{str(team[3]):>{2}}"
         penalty = f"{str(team[4]):>{max_field_width[3]}}"
-        print(rank, name, university, accept, penalty)
+        print(rank, name, university, accept, penalty, end=' ')
+        if 'status' not in hide:
+            for status, first_accept in zip(team[5], scoreboard[-1][5]):
+                if row < len(scoreboard) - 2 or len(scoreboard) == 1:
+                    trying, timing = status.split('/')    
+                    status_color = None
+                    if timing == '--' and int(trying):
+                        status_color = 'light red'
+                    elif timing != '--':
+                        if int(timing) == first_accept:
+                            status_color = 'light cyan'
+                        else:
+                            status_color = 'light green'
+                else:
+                    status_color = 'green'
+                status_message = f"{status:>{6}}"
+                if status_color:
+                    status_message = colored_text(status_message, status_color)
+                print(status_message, end=' ')
+        print()
 
 
-def printscoreboard(scoreboard, env):
+def printscoreboard(scoreboard, env, hide = False):
     with open('./config.json', 'r') as configfile:
         config = json.load(configfile)
-    
+    hide_list = list(hide.split()) if hide else []
     show = []
     if env == 'all':
         show += scoreboard
@@ -120,4 +153,4 @@ def printscoreboard(scoreboard, env):
         print("\033[1;31mError\033[0m: Invalid arguman for env!")
         exit(1)
     
-    showscoreboard(show, config['team_curser'])
+    showscoreboard(show, config['team_curser'], hide_list)
