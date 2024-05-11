@@ -1,15 +1,15 @@
 import json
 
-def add_status(name):
+def add_to_fav(name):
     with open('./config.json', 'r') as configfile:
         config = json.load(configfile)
     with open(f"./{config['jsonfile']}", 'r') as jsonfile:
         scoreboard = json.load(jsonfile)
 
-    if name.lower in [team[2] for team in scoreboard['teams']]:
+    if name.lower() in [team[2].lower() for team in scoreboard['teams']] and name.lower() not in [team.lower() for team in config['favorites']]:
         config['favorites'].append(name)
     else:
-        print(f"\033[1;31mError\033[0m: {name} is not exist!")
+        print(f"\033[1;31mError\033[0m: {name} is not exist! (or exist in favorite list)")
         exit(0)
 
     with open(f"./{config['jsonfile']}", 'w') as jsonfile:

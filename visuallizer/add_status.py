@@ -28,6 +28,7 @@ def add_status(time, problem, status):
                 team[6][problem - 1] = 1
                 team[8][problem - 1] = time
             team[7][problem - 1] += 1
+            break
 
     with open(f"./{config['jsonfile']}", 'w') as jsonfile:
         json.dump(scoreboard, jsonfile)
